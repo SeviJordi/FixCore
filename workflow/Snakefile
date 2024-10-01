@@ -1,0 +1,26 @@
+# TODO
+import sys
+from pathlib import Path
+from snakemake.utils import min_version
+import subprocess
+
+# Set minimum version of snakemake to work with
+min_version("8.20")
+
+
+# Load configuration files
+configfile: "config/config.yaml"
+configfile: "config/target.yaml"
+
+# Read target directory
+TARGET_DIR = Path(config["target_dir"])
+PREFIX = config["prefix"]
+OUTDIR = Path(config["outdir"])
+
+# Include rules
+TODO
+
+# Set final file
+rule all:
+    input:
+        OUTDIR/f"tree/{PREFIX}.treefile"
