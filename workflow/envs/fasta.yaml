@@ -1,0 +1,6 @@
+channels:
+  - auto
+  - bioconda
+dependencies:
+  - biotools==1.2.12
+  - seqkit==2.8.2
