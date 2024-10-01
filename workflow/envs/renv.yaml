@@ -1,0 +1,9 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - r-base=4.4.1
+  - r-tidyverse==2.0.0
+  - r-ape==5.8
+  - r-phangorn==2.12.1
+  - r-phylobase==0.8.12
