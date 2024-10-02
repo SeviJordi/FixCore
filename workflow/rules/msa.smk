@@ -26,7 +26,7 @@ rule align:
 
 rule generate_consensus:
     conda:
-        "../envs/fasta.yaml"
+        "../envs/biopython.yaml"
     input:
         aligned = PATHALN/"{gene_name}.mafft.fasta"
     output:
