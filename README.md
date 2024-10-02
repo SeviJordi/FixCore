@@ -1,7 +1,7 @@
 # FixCore
 
 [![Snakemake](https://img.shields.io/badge/Snakemake-≥8.20-brightgreen.svg?style=flat)](https://snakemake.readthedocs.io)
-
+![Test workflow](https://github.com/PathoGenOmics-Lab/VIPERA/actions/workflows/test.yaml/badge.svg)
 Snakemake workflow to polish core genome alignments
 
 ---

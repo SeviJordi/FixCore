@@ -1,5 +1,5 @@
-name: Run Drought Index Workflow
-run-name: ${{ github.actor }} is running snakemake workflow 🚀
+name: Test FixCore workflow
+run-name: ${{ github.actor }} is testing snakemake workflow 🚀
 on: [push, pull_request]
  
 jobs:
