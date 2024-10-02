@@ -1,2 +1,8 @@
 TRIMAL_PCT:
-  0.2
+  0.8
+
+EVO_MODEL:
+  "GTR+G"
+
+BOOTSTRAP:
+  1000
