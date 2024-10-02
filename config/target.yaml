@@ -1,8 +1,8 @@
 GENES_DIR:
-  "/home/jorsefor/data_practical_session_1"
+  ""
 EXTENSION:
-  ".fasta"
+  ""
 PREFIX:
-  "PRUEBA_1"
+  ""
 OUTDIR:
-  "/home/jorsefor/prueba1"
+  ""
