@@ -62,7 +62,7 @@ for dna in dna_to_ambig:
 parser = argparse.ArgumentParser(description = "Standalone tool for generating a consensus sequence from an alignment in a multifasta, supplied on STDIN. Results are written to STDOUT")
 
 parser.add_argument("-t","--threshold", help = "threshold for selecting residues", type = float_range(0, 1), default = 0.5)
-parser.add_argument("-n","--name", help = "name of the output sequence", type = str, default = "consensus")
+parser.add_argument("-n","--name", help = "name of the output sequence", type = str, default = "CONSENSUS")
 
 # Function definitions
 
@@ -179,10 +179,10 @@ if __name__ == "__main__":
     # aln = AlignIO.read("/home/thomas/work/iBioGen_postdoc/MMGdatabase/phylogeny/reftree498_project/3_alignment/12_nt_aln_consex/CONS00001_COX2.fa", 'fasta')
     # aln = AlignIO.read("/tmp/source.fa", "fasta")
     try:
-        aln = AlignIO.read(sys.stdin, "fasta")
+        aln = AlignIO.read(snakemake.input.aligned, "fasta")
     except ValueError:
         sys.exit(0)
     # Write consensus
     SeqIO.write(SeqRecord(mr_consensus(aln, args.threshold), 
                           id=args.name, description = ''), 
-                sys.stdout, "fasta")
+                snakemake.output.consensus, "fasta")

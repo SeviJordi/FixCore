@@ -31,11 +31,8 @@ rule generate_consensus:
         aligned = PATHALN/"{gene_name}.mafft.fasta"
     output:
         consensus = PATHCONS/"{gene_name}.consensus.fasta"
-    shell:
-        """
-        python3 workflow/scripts/consensus.py -n CONSENSUS < {input.aligned} |\
-            sed 's/n/-/g' > {output.consensus}
-        """
+    script:
+        "../scripts/consensus.py"
 
 rule add_consensus:
     input:
@@ -45,6 +42,7 @@ rule add_consensus:
         with_consensus = PATHCONS/"{gene_name}.mafft.concat.fasta"
     shell:
         """
+        sed -i 's/-/n/g' {input.consensus}
         cat {input.consensus} {input.aln} > {output.with_consensus}
         """
 
