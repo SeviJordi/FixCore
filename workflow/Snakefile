@@ -34,4 +34,4 @@ TODO
 # Set final file
 rule all:
     input:
-        OUTDIR/f"tree/{PREFIX}.treefile"
+        PATHPHYLO/f"{PREFIX}.treefile"
