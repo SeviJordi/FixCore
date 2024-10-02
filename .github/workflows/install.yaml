@@ -42,7 +42,7 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
-        - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
       - name: Dry run
         uses: snakemake/snakemake-github-action@v1
         with:
@@ -56,7 +56,7 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
-        - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
       - name: Run test pipeline
         uses: snakemake/snakemake-github-action@v1
         with:
