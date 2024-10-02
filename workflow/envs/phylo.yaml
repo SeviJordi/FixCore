@@ -1,0 +1,11 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python>=3.5
+  - pip==24.2
+  - pip:
+    - amas==1.0
+  - iqtree==2.3.6
+  - snp-sites==2.5.1
+  - snp-dists==0.8.2
