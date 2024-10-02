@@ -9,7 +9,7 @@ rule concat_alignments:
         partitions = OUTDIR/f"{PREFIX}.concatenated.fixcore.partitions"
     shell:
         """
-        AMAS.py concat -f fasta -d dna -i {input.fastas} -c 8 -t {output.concatenated} -p {output.partitions}
+        AMAS concat -f fasta -d dna -i {input.fastas} -c 8 -t {output.concatenated} -p {output.partitions}
         """
 
 rule create_vcf:
