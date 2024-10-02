@@ -1,6 +1,9 @@
 name: Install
+
 on: [push, pull_request]
+
 jobs:
+
   skip_duplicates:
       permissions:
         actions: write
@@ -14,6 +17,7 @@ jobs:
         with:
           cancel_others: 'true'
           concurrent_skipping: 'same_content_newer'
+          
   Install:  
     needs: skip_duplicates
     if: ${{ needs.skip_duplicate.outputs.should_skip != 'true' }}
