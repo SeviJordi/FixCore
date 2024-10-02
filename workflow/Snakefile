@@ -1,6 +1,7 @@
 # TODO
 import sys
 from pathlib import Path
+from os import listdir
 from snakemake.utils import min_version
 import subprocess
 
@@ -29,7 +30,15 @@ for directory in directories:
 
 
 # Include rules
-TODO
+include: "rules/msa.smk"
+include: "rules/phylo.smk"
+include: "rules/fixcore.smk"
+include: "rules/trimal.smk"
+
+# Useful functions
+def iter_gene_names():
+    for file in listdir(TARGET_DIR):
+        yield file.replace(config["EXTENSION"], "")
 
 # Set final file
 rule all:
