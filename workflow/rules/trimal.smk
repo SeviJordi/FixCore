@@ -11,8 +11,8 @@ rule run_trimal:
         trimmed = PATHCURATED/"{gene_name}.mafft.evalmsa.trimmal.fasta"
     shell:
         """
-        trimal -in {input.aligned} -out {wildcard.gene_name} -gt {params.threshold}
-        sed 's/ .*//g' {wildcard.gene_name} > {output.trimmed}
+        trimal -in {input.aligned} -out {wildcards.gene_name} -gt {params.threshold}
+        sed 's/ .*//g' {wildcards.gene_name} > {output.trimmed}
         """
     
 

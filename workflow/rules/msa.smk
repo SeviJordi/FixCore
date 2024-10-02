@@ -1,14 +1,14 @@
 rule clean_headers:
     input:
-        fasta = TARGET_DIR/"{gene_name}" + f"{config['EXTENSION']}"
+        fasta = TARGET_DIR/("{gene_name}%s" % config["EXTENSION"])
     output:
         temp(PATHALN/"{gene_name}.clean.fasta")
     shell:
-    """
-    sed -e 's/_[0-9]\{5\}\($\| .*\)//' \
-        -e 's/_R_//g' \
-        -e 's/;.*//g' {input.fasta} > {output}
-    """
+        """
+        sed -e 's/_[0-9]\{{5\}}\($\| .*\)//' \
+            -e 's/_R_//g' \
+            -e 's/;.*//g' {input.fasta} > {output}
+        """
 
 rule align:
     threads: 8
@@ -19,10 +19,10 @@ rule align:
     output:
         aligned = PATHALN/"{gene_name}.mafft.fasta"
     shell:
-    """
-    mafft --thread {threads} \
-        --adjustdirection {input.fasta} > {output.aligned}
-    """
+        """
+        mafft --thread {threads} \
+            --adjustdirection {input.fasta} > {output.aligned}
+        """
 
 rule generate_consensus:
     conda:
@@ -32,10 +32,10 @@ rule generate_consensus:
     output:
         consensus = PATHCONS/"{gene_name}.consensus.fasta"
     shell:
-    """
-    consensus.py -n CONSENSUS < {input.aligned} |\
-        sed 's/n/-/g' > {output.consensus}
-    """
+        """
+        python3 workflow/scripts/consensus.py -n CONSENSUS < {input.aligned} |\
+            sed 's/n/-/g' > {output.consensus}
+        """
 
 rule add_consensus:
     input:
@@ -44,9 +44,9 @@ rule add_consensus:
     output:
         with_consensus = PATHCONS/"{gene_name}.mafft.concat.fasta"
     shell:
-    """
-    cat {input.consensus} {input.aln} > {output.with_consensus}
-    """
+        """
+        cat {input.consensus} {input.aln} > {output.with_consensus}
+        """
 
 rule translate:
     threads: 8
@@ -58,15 +58,15 @@ rule translate:
     output:
         translated = PATHCONS/"{gene_name}.mafft.concat.aa.fasta"
     shell:
-    """
-    seqkit translate --threads {threads} {input} > tmp1
-    seqkit replace --threads {threads} \
-        -p "(-)" -r 'X' \
-        -s tmp1 > tmp2
-    seqkit replace --threads {threads} \
-        -p "(N)" -r '*' \
-        -s tmp2 > {output.translated}
-    """
+        """
+        seqkit translate --threads {threads} {input} > tmp1
+        seqkit replace --threads {threads} \
+            -p "(-)" -r 'X' \
+            -s tmp1 > tmp2
+        seqkit replace --threads {threads} \
+            -p "(N)" -r '*' \
+            -s tmp2 > {output.translated}
+        """
 
 rule generate_vcf:
     conda:
@@ -76,6 +76,6 @@ rule generate_vcf:
     output:
         vcf = PATHCONS/"{gene_name}.mafft.concat.aa.vcf"
     shell:
-    """
-    snp-sites -v {input.translated} > {output.vcf}
-    """
+        """
+        snp-sites -v {input.translated} > {output.vcf}
+        """

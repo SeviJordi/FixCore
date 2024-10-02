@@ -14,10 +14,10 @@ configfile: "config/config.yaml"
 configfile: "config/target.yaml"
 
 # Read target directory and set working tree
-TARGET_DIR = Path(config["target_dir"])
-PREFIX = config["prefix"]
-OUTDIR = Path(config["outdir"])
-PATHFIXCORE = Path(OUTFIR/"PREPROCESING")
+TARGET_DIR = Path(config["GENES_DIR"])
+PREFIX = config["PREFIX"]
+OUTDIR = Path(config["OUTDIR"])
+PATHFIXCORE = Path(OUTDIR/"PREPROCESING")
 PATHALN = Path(PATHFIXCORE/"ALN")
 PATHCONS = Path(PATHFIXCORE/"CONS")
 PATHCURATED = Path(OUTDIR/"DEF_GENES")
@@ -28,17 +28,16 @@ directories = [OUTDIR, PATHFIXCORE, PATHALN, PATHCONS, PATHCURATED, PATHPHYLO]
 for directory in directories:
     directory.mkdir(parents=True, exist_ok=True)
 
-
+# Useful functions
+def iter_gene_names():
+    for file in listdir(TARGET_DIR):
+        yield file.replace(config["EXTENSION"], "")
+        
 # Include rules
 include: "rules/msa.smk"
 include: "rules/phylo.smk"
 include: "rules/fixcore.smk"
 include: "rules/trimal.smk"
-
-# Useful functions
-def iter_gene_names():
-    for file in listdir(TARGET_DIR):
-        yield file.replace(config["EXTENSION"], "")
 
 # Set final file
 rule all:

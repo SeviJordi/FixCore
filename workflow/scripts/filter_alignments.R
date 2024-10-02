@@ -13,16 +13,16 @@ removedf= data.frame(isolate=character(0))
 
 
 # The algorithm only works if there are more than 3 variants in the VCF
-nlines <- readLines(snakemake@output[["vcf"]])[!startsWith(readLines(snakemake@output[["vcf"]]), "#")] %>% length()
+nlines <- readLines(snakemake@input[["vcf"]])[!startsWith(readLines(snakemake@input[["vcf"]]), "#")] %>% length()
 if (nlines >= 3){
 
     ## Get the length of the alignment, which is in the VCF
-    msalen = grep("length", readLines(snakemake@output[["vcf"]]), value = T) %>% 
+    msalen = grep("length", readLines(snakemake@input[["vcf"]]), value = T) %>% 
         str_remove(., ".*=") %>% str_remove(., ">") %>% as.integer()
     
     ## Read the VCF file
     vcf <- read.csv(
-        snakemake@output[["vcf"]],
+        snakemake@input[["vcf"]],
         sep = "\t", 
         skip = 3,
         colClasses = c("REF"="character", "ALT"="character") # to avoid reading F and T as booleans
@@ -50,7 +50,7 @@ if (nlines >= 3){
                 )
             ) %>%
         select(-c(REF)) %>% # change the reference created by snp-sites for the emboss
-        rename(REF = "EMBOSS_001")
+        rename(REF = "CONSENSUS")
     
     ## Transform the VCF from matrix to molten table
     vcf_list <- vcf %>%
@@ -139,8 +139,7 @@ if (nlines >= 3){
   
 
         # Evaluation of internal nodes
-        nodes <- outliers_int 
-            %>% pull(node) # extract all nodes of oulier_int
+        nodes <- outliers_int %>% pull(node) # extract all nodes of oulier_int
   
         nodestocheck = data.frame(
             label=character(0),
