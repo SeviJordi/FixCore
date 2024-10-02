@@ -1,6 +1,6 @@
 rule clean_headers:
     input:
-        fasta = TARGET_DIR/"{gene_name}.aln"
+        fasta = TARGET_DIR/"{gene_name}" + f"{config['EXTENSION']}"
     output:
         temp(PATHALN/"{gene_name}.clean.fasta")
     shell:
