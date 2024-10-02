@@ -1,0 +1,8 @@
+GENES_DIR:
+  "alignments"
+EXTENSION:
+  ".fasta"
+PREFIX:
+  "TEST"
+OUTDIR:
+  "output"
