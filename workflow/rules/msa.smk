@@ -1,4 +1,5 @@
 rule clean_headers:
+    threads: 1
     input:
         fasta = TARGET_DIR/("{gene_name}%s" % config["EXTENSION"])
     output:
@@ -31,6 +32,7 @@ rule align:
 rule generate_consensus:
     conda:
         "../envs/biopython.yaml"
+    threads: 1
     input:
         aligned = PATHALN/"{gene_name}.mafft.fasta"
     output:
@@ -41,6 +43,7 @@ rule generate_consensus:
         "../scripts/consensus.py"
 
 rule add_consensus:
+    threads: 1
     input:
         consensus = PATHCONS/"{gene_name}.consensus.fasta",
         aln = PATHALN/"{gene_name}.mafft.fasta"
@@ -79,6 +82,7 @@ rule translate:
 rule generate_vcf:
     conda:
         "../envs/fasta.yaml"
+    threads: 1
     input:
         translated = PATHCONS/"{gene_name}.mafft.concat.aa.fasta"
     output:

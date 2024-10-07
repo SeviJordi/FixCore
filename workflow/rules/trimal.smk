@@ -3,6 +3,7 @@ rule run_trimal:
         "shallow"
     conda:
         "../envs/trimal.yaml"
+    threads: 1
     params:
         threshold = config["TRIMAL_PCT"]
     input:

@@ -17,6 +17,7 @@ rule concat_alignments:
 rule create_vcf:
     conda:
         "../envs/phylo.yaml"
+    threads: 1
     input:
         alignment = OUTDIR/f"{PREFIX}.concatenated.fixcore.fasta"
     output:
@@ -32,6 +33,7 @@ rule create_vcf:
 rule get_SNPs_alignment:
     conda:
         "../envs/phylo.yaml"
+    threads: 1
     input:
         alignment = OUTDIR/f"{PREFIX}.concatenated.fixcore.fasta"
     output:
