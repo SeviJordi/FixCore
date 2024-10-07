@@ -7,4 +7,4 @@ dependencies:
   - r-ape==5.8
   - r-phangorn==2.12.1
   - r-phylobase==0.8.12
-  - r-logger==0.2.2
+  - r-logger==0.3.0
