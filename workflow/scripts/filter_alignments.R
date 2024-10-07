@@ -21,7 +21,7 @@ removedf= data.frame(isolate=character(0))
 
 # The algorithm only works if there are more than 3 variants in the VCF
 nlines <- readLines(snakemake@input[["vcf"]])[!startsWith(readLines(snakemake@input[["vcf"]]), "#")] %>% length()
-if (nlines >= 3){
+if (nlines >= as.numeric(snakemake@params[["max_consecutve_variants"]])){
 
     ## Get the length of the alignment, which is in the VCF
     msalen = grep("length", readLines(snakemake@input[["vcf"]]), value = T) %>% 
@@ -75,11 +75,11 @@ if (nlines >= 3){
         filter(ALT == "X") %>% 
         group_by(isolate) %>% 
         count() %>%
-        filter(n > (0.10 * msalen)) %>% 
+        filter(n > (as.numeric(snakemake@params["max_missing"]) * msalen)) %>% 
         select(isolate)
     
     removedf = rbind(removedf, tempo)
-    log_info("ISolates with more than 15% o gaps removed")
+    log_info(sprintf("ISolates with more than %s%s o gaps removed", snakemake@params[["max_missing"]], "%"))
 
     ## Check if there are any samples with more than 3 consecutive variant amino acids
     testnvcf <- vcf_list %>% 
