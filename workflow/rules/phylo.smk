@@ -7,6 +7,8 @@ rule concat_alignments:
     output:
         concatenated = OUTDIR/f"{PREFIX}.concatenated.fixcore.fasta",
         partitions = OUTDIR/f"{PREFIX}.concatenated.fixcore.partitions"
+    log:
+        LOGDIR/"concat_alignments.log"
     shell:
         """
         AMAS.py concat -f fasta -d dna -i {input.fastas} -c 8 -t {output.concatenated} -p {output.partitions}
@@ -18,7 +20,9 @@ rule create_vcf:
     input:
         alignment = OUTDIR/f"{PREFIX}.concatenated.fixcore.fasta"
     output:
-        vcf = PATHPHYLO/f"{PREFIX}.vcf"
+        vcf = PATHPHYLO/f"{PREFIX}.vcf",
+    log:
+        LOGDIR/"create_vcf.log"
     shell:
         """
         snp-sites -v {input.alignment} > {output.vcf}
@@ -31,7 +35,9 @@ rule get_SNPs_alignment:
     input:
         alignment = OUTDIR/f"{PREFIX}.concatenated.fixcore.fasta"
     output:
-        snps = PATHPHYLO/f"{PREFIX}.SNPs.fasta"
+        snps = PATHPHYLO/f"{PREFIX}.SNPs.fasta",
+    log:
+        LOGDIR/"get_SNPs_alignment.log"
     shell:
         """
         snp-sites {input.alignment} > {output.snps}
@@ -51,6 +57,8 @@ rule iqtree:
     output:
         treefile = PATHPHYLO/f"{PREFIX}.treefile",
         constantvar = PATHPHYLO/f"{PREFIX}.fconst.txt"
+    log:
+        LOGDIR/"iqtree.log"
     shell:
         """
         fconstsvar=$(snp-sites -C  {input.alignment})

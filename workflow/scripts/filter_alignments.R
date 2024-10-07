@@ -7,6 +7,13 @@ library("ape")
 library("phylobase")
 library("stringr")
 library("phangorn")
+library("logger")
+log_threshold(INFO)
+
+# Write stdout and stderr to log file
+log <- file(snakemake@log[[1]], open = "wt")
+sink(log, type = "message")
+sink(log, type = "output")
 
 ## Start the dataframe with the isolates to remove
 removedf= data.frame(isolate=character(0))
@@ -72,7 +79,8 @@ if (nlines >= 3){
         select(isolate)
     
     removedf = rbind(removedf, tempo)
-    
+    log_info("ISolates with more than 15% o gaps removed")
+
     ## Check if there are any samples with more than 3 consecutive variant amino acids
     testnvcf <- vcf_list %>% 
         filter(REF != ALT) %>%
@@ -91,7 +99,8 @@ if (nlines >= 3){
 
     # If there are more than 3 variant sites in a row in the VCF, the tree is evaluated
     if (nrow(testnvcf) > 0){
-        
+        log_info("There are samples with more than 3 consecutive variant amino acids")
+
         # Read the fasta
         fasta <- read.FASTA(snakemake@input[["aligned"]])
 
@@ -121,6 +130,8 @@ if (nlines >= 3){
             ) %>% 
             pull(sd)
 
+        log_info(sprintf("Standard deviation for terminal branches: %f", sdmax_tip))
+
         # Standard deviation for internal branches
         sdmax_int <- tr4df %>% # extract 3 SD from internal branches
             filter(node.type == "internal") %>% 
@@ -128,6 +139,8 @@ if (nlines >= 3){
                 sd = mean(edge.length)+(3*sd(edge.length))
                 ) %>%
             pull(sd)
+
+        log_info(sprintf("Standard deviation for internal branches: %f", sdmax_int))
 
         # Search for outliers
         outliers_tips <- tr4df  %>% # select teminal outliers --> those nodes and tips above the 3SD 
@@ -230,6 +243,7 @@ if (nlines >= 3){
 
 # Write the isolates to remove
 write.table(removedf, snakemake@output[["removed"]],  row.names = F,  col.names=F, quote = F)
+log_info(sprintf("Number of isolates to remove: %s", length(removedf$isolate)))
 
 # Subset the alignment
 aln <- read.FASTA(snakemake@input[["aligned"]])

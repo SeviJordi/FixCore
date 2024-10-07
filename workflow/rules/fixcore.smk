@@ -7,6 +7,8 @@ rule prune_trees:
     output:
         filtered = PATHCURATED/"{gene_name}.mafft.evalmsa.fasta",
         removed = PATHCONS/"{gene_name}.removed.names"
+    log:
+        LOGDIR/"prune_trees"/"{gene_name}.log"
 
     script:
         "../scripts/filter_alignments.R"

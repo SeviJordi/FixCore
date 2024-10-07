@@ -9,6 +9,8 @@ rule run_trimal:
         aligned = PATHCURATED/"{gene_name}.mafft.evalmsa.fasta"
     output:
         trimmed = PATHCURATED/"{gene_name}.mafft.evalmsa.trimmal.fasta"
+    log:
+        LOGDIR/"trimal"/"{gene_name}.log"
     shell:
         """
         trimal -in {input.aligned} -out {wildcards.gene_name} -gt {params.threshold}

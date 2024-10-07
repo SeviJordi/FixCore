@@ -3,6 +3,8 @@ rule clean_headers:
         fasta = TARGET_DIR/("{gene_name}%s" % config["EXTENSION"])
     output:
         temp(PATHALN/"{gene_name}.clean.fasta")
+    log:
+        LOGDIR/"clean_headers"/"{gene_name}.log"
     shell:
         """
         sed -e 's/_[0-9]\{{5\}}\($\| .*\)//' \
@@ -18,6 +20,8 @@ rule align:
         fasta = PATHALN/"{gene_name}.clean.fasta"
     output:
         aligned = PATHALN/"{gene_name}.mafft.fasta"
+    log:
+        LOGDIR/"align"/"{gene_name}.log"
     shell:
         """
         mafft --thread {threads} \
@@ -31,6 +35,8 @@ rule generate_consensus:
         aligned = PATHALN/"{gene_name}.mafft.fasta"
     output:
         consensus = PATHCONS/"{gene_name}.consensus.fasta"
+    log:
+        LOGDIR/"consensus"/"{gene_name}.log"
     script:
         "../scripts/consensus.py"
 
@@ -39,7 +45,9 @@ rule add_consensus:
         consensus = PATHCONS/"{gene_name}.consensus.fasta",
         aln = PATHALN/"{gene_name}.mafft.fasta"
     output:
-        with_consensus = PATHCONS/"{gene_name}.mafft.concat.fasta"
+        with_consensus = PATHCONS/"{gene_name}.mafft.concat.fasta",
+    log:
+        LOGDIR/"add_consensus"/"{gene_name}.log"
     shell:
         """
         sed -i 's/-/n/g' {input.consensus}
@@ -55,6 +63,8 @@ rule translate:
         PATHCONS/"{gene_name}.mafft.concat.fasta"
     output:
         translated = PATHCONS/"{gene_name}.mafft.concat.aa.fasta"
+    log:
+        LOGDIR/"translate"/"{gene_name}.log"
     shell:
         """
         seqkit translate --threads {threads} {input} > tmp1
@@ -73,6 +83,8 @@ rule generate_vcf:
         translated = PATHCONS/"{gene_name}.mafft.concat.aa.fasta"
     output:
         vcf = PATHCONS/"{gene_name}.mafft.concat.aa.vcf"
+    log:
+        LOGDIR/"generate_vcf"/"{gene_name}.log"
     shell:
         """
         snp-sites -v {input.translated} > {output.vcf}
