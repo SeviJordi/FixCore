@@ -2,6 +2,8 @@ rule concat_alignments:
     threads: 8
     conda:
         "../envs/phylo.yaml"
+    params:
+        temp_dir = TEMP_DIR
     input:
         fastas = expand(PATHCURATED/"{gene_name}.mafft.evalmsa.trimmal.fasta", gene_name=iter_gene_names())
     output:
@@ -11,7 +13,19 @@ rule concat_alignments:
         LOGDIR/"concat_alignments.log"
     shell:
         """
-        AMAS.py concat -f fasta -d dna -i {input.fastas} -c 8 -t {output.concatenated} -p {output.partitions}
+        # Move non empty files to temp dir
+        
+        for file in {input.fastas}; do
+            nlines=$(wc -l $file | cut -d" " -f1)
+            nseqs=$(grep -c ">" $file)
+
+            if [[ $nlines -gt $nseqs ]]; then
+                mv $file {params.temp_dir}
+            fi
+            
+        done
+
+        AMAS.py concat -f fasta -d dna -i "{params.temp_dir}/*" -c 8 -t {output.concatenated} -p {output.partitions}
         """
 
 rule create_vcf:
