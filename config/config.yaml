@@ -1,11 +1,21 @@
 TRIMAL_PCT:
   0.8
 
-EVO_MODEL:
-  "GTR+G"
+MAFFT:
+  N_CORES:
+    8
 
-BOOTSTRAP:
-  1000
+SEQKIT:
+  N_CORES:
+    8
+    
+IQTREE:
+  EVO_MODEL:
+    "GTR+G"
+  BOOTSTRAP:
+    1000
+  N_CORES:
+    8
 
 PRUNE_TREES:
   MAX_MISSING: 0.15

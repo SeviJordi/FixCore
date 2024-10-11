@@ -17,7 +17,7 @@ rule clean_headers:
         """
 
 rule align:
-    threads: 8
+    threads: config["MAFFT"]["N_CORES"]
     conda: "../envs/mafft.yaml"
     shadow: "minimal"
     input:
@@ -67,7 +67,7 @@ rule add_consensus:
         """
 
 rule translate:
-    threads: 8
+    threads: config["SEQKIT"]["N_CORES"]
     shadow: "shallow"
     conda:
         "../envs/fasta.yaml"
@@ -105,6 +105,6 @@ rule generate_vcf:
         """
         exec >{log}
         exec 2>&1
-        
+
         snp-sites -v {input.translated} > {output.vcf}
         """

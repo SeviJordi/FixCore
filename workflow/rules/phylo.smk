@@ -71,13 +71,13 @@ rule get_SNPs_alignment:
         """
 
 rule iqtree:
-    threads: 8
+    threads: config["IQTREE"]["N_CORES"]
     conda:
         "../envs/phylo.yaml"
     params:
         prefix = f"{PATHPHYLO}/{PREFIX}",
-        model = config["EVO_MODEL"],
-        bootstrap_replicates = config["BOOTSTRAP"]
+        model = config["IQTREE"]["EVO_MODEL"],
+        bootstrap_replicates = config["IQTREE"]["BOOTSTRAP"]
     input:
         snps = PATHPHYLO/f"{PREFIX}.SNPs.fasta",
         alignment = OUTDIR/f"{PREFIX}.concatenated.fixcore.fasta"
@@ -90,7 +90,7 @@ rule iqtree:
         """
         exec >{log}
         exec 2>&1
-        
+
         fconstsvar=$(snp-sites -C  {input.alignment})
         echo $fconstsvar > {output.constantvar}
 
