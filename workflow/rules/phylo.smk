@@ -14,7 +14,7 @@ rule concat_alignments:
     shell:
         """
         # Move non empty files to temp dir
-        
+
         for file in {input.fastas}; do
             nlines=$(wc -l $file | cut -d" " -f1)
             nseqs=$(grep -c ">" $file)
@@ -26,6 +26,8 @@ rule concat_alignments:
         done
 
         AMAS.py concat -f fasta -d dna -i "{params.temp_dir}/*" -c 8 -t {output.concatenated} -p {output.partitions}
+
+        rm "{params.temp_dir}/*"
         """
 
 rule create_vcf:
