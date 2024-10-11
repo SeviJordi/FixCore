@@ -14,7 +14,10 @@ rule run_trimal:
         LOGDIR/"trimal"/"{gene_name}.log"
     shell:
         """
-        trimal -in {input.aligned} -out {wildcards.gene_name} -gt {params.threshold}
+        exec >{log}
+        exec 2>&1
+
+        trimal -in {input.aligned} -out {wildcards.gene_name} -gt {params.threshold} 
         sed 's/ .*//g' {wildcards.gene_name} > {output.trimmed}
         """
     

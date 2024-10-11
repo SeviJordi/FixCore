@@ -12,7 +12,10 @@ rule concat_alignments:
     log:
         LOGDIR/"concat_alignments.log"
     shell:
-        """
+        """      
+        exec >{log}
+        exec 2>&1
+
         # Move non empty files to temp dir
 
         for file in {input.fastas}; do
@@ -42,7 +45,10 @@ rule create_vcf:
         LOGDIR/"create_vcf.log"
     shell:
         """
-        snp-sites -v {input.alignment} > {output.vcf}
+        exec >{log}
+        exec 2>&1
+
+        snp-sites -v {input.alignment} > {output.vcf} 
         """
 
 
@@ -58,6 +64,9 @@ rule get_SNPs_alignment:
         LOGDIR/"get_SNPs_alignment.log"
     shell:
         """
+        exec >{log}
+        exec 2>&1
+
         snp-sites {input.alignment} > {output.snps}
         """
 
@@ -79,6 +88,9 @@ rule iqtree:
         LOGDIR/"iqtree.log"
     shell:
         """
+        exec >{log}
+        exec 2>&1
+        
         fconstsvar=$(snp-sites -C  {input.alignment})
         echo $fconstsvar > {output.constantvar}
 

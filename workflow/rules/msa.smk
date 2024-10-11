@@ -8,6 +8,9 @@ rule clean_headers:
         LOGDIR/"clean_headers"/"{gene_name}.log"
     shell:
         """
+        exec >{log}
+        exec 2>&1
+
         sed -e 's/_[0-9]\{{5\}}\($\| .*\)//' \
             -e 's/_R_//g' \
             -e 's/;.*//g' {input.fasta} > {output}
@@ -25,6 +28,9 @@ rule align:
         LOGDIR/"align"/"{gene_name}.log"
     shell:
         """
+        exec >{log}
+        exec 2>&1
+
         mafft --thread {threads} \
             --adjustdirection {input.fasta} > {output.aligned}
         """
@@ -53,6 +59,9 @@ rule add_consensus:
         LOGDIR/"add_consensus"/"{gene_name}.log"
     shell:
         """
+        exec >{log}
+        exec 2>&1
+
         sed -i 's/-/n/g' {input.consensus}
         cat {input.consensus} {input.aln} > {output.with_consensus}
         """
@@ -70,6 +79,9 @@ rule translate:
         LOGDIR/"translate"/"{gene_name}.log"
     shell:
         """
+        exec >{log}
+        exec 2>&1
+
         seqkit translate --threads {threads} {input} > tmp1
         seqkit replace --threads {threads} \
             -p "(-)" -r 'X' \
@@ -91,5 +103,8 @@ rule generate_vcf:
         LOGDIR/"generate_vcf"/"{gene_name}.log"
     shell:
         """
+        exec >{log}
+        exec 2>&1
+        
         snp-sites -v {input.translated} > {output.vcf}
         """
