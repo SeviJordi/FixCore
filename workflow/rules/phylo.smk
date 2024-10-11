@@ -25,7 +25,7 @@ rule concat_alignments:
             
         done
 
-        AMAS.py concat -f fasta -d dna -i "{params.temp_dir}/*" -c 8 -t {output.concatenated} -p {output.partitions}
+        AMAS.py concat -f fasta -d dna -i "{params.temp_dir}"/* -c 8 -t {output.concatenated} -p {output.partitions}
 
         rm "{params.temp_dir}/*"
         """
