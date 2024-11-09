@@ -2,7 +2,8 @@
 
 [![Snakemake](https://img.shields.io/badge/Snakemake-≥8.20-brightgreen.svg?style=flat)](https://snakemake.readthedocs.io)
 ![Test workflow](https://github.com/SeviJordi/FixCore/actions/workflows/test.yaml/badge.svg)
-
+ [![License (AGPL version 3)](https://img.shields.io/badge/license-GNU%20AGPL%20version%203-green.svg)](COPYING)
+ 
 Snakemake workflow to polish core genome alignments
 
 ---
@@ -32,4 +33,4 @@ We recomend to run the workflow with at least 8 threads, but any natural number 
 
 ## Outputs
 
-Once the workflow is ended, it will have produced a concatenated alignment of the curated alignments of each gene and a maximum likelihood phylogeny for that alignment. Also intermedate files are provided to allow diferent analyses. 
+Once the workflow is ended, it will have produced a concatenated alignment of the curated alignments of each gene and a maximum likelihood phylogeny for that alignment. Also intermedate files are provided to allow different analyses. 
