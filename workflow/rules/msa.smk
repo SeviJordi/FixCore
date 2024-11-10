@@ -106,5 +106,5 @@ rule generate_vcf:
         exec >{log}
         exec 2>&1
 
-        snp-sites -v {input.translated} > {output.vcf}
+        snp-sites -v {input.translated} | cat > {output.vcf}
         """
