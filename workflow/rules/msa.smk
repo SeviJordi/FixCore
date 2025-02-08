@@ -15,7 +15,7 @@ rule align:
         exec 2>&1
 
         mafft --thread {threads} \
-            --adjustdirection {input.fasta} \
+            --adjustdirection {input.fasta} |\
          sed -e 's/_[0-9]\{{5\}}\($\| .*\)//' \
             -e 's/_R_//g' \
             -e 's/;.*//g' > {output.aligned}
