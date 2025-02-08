@@ -18,7 +18,7 @@ rule align:
             --adjustdirection {input.fasta} \
          sed -e 's/_[0-9]\{{5\}}\($\| .*\)//' \
             -e 's/_R_//g' \
-            -e 's/;.*//g > {output.aligned}
+            -e 's/;.*//g' > {output.aligned}
         """
 
 rule generate_consensus:
