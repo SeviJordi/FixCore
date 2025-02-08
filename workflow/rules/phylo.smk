@@ -18,16 +18,21 @@ rule concat_alignments:
 
         # Move non empty files to temp dir
 
+        i=0
         for file in {input.fastas}; do
             nlines=$(wc -l $file | cut -d" " -f1)
             nseqs=$(grep -c ">" $file)
 
             if [[ $nlines -gt $nseqs ]]; then
                 mv $file {params.temp_dir}
+            else
+                i=$((i+1))
             fi
             
         done
 
+        echo "Number of empty files: $i"
+        
         AMAS.py concat -f fasta -d dna -i "{params.temp_dir}"/* -c 8 -t {output.concatenated} -p {output.partitions}
 
         rm -r {params.temp_dir}
