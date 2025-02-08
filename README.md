@@ -22,7 +22,7 @@ In case your system lacks Snakemake version 8.20 or newer, it is necessary to [d
 
 ## Usage
 
-To use the workflow with default settings modify the [target configuration file](/config/target.yaml). You have to provide the folder in which the fasta files for the individual genes are (aligned or not), the extension of the files and a prefix to use in the outputs. Then you can run the workflow with:
+To use the workflow with default settings modify the [target configuration file](/config/target.yaml). You have to provide the folder in which the multifasta files for the gene families are with **.fasta** extension and a prefix to use in the outputs. Then you can run the workflow with:
 
 ```
 snakemake --use-conda -c 8  # To run with 8 threads

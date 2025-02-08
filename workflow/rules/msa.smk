@@ -1,27 +1,10 @@
-rule clean_headers:
-    threads: 1
-    input:
-        fasta = TARGET_DIR/("{gene_name}%s" % config["EXTENSION"])
-    output:
-        temp(PATHALN/"{gene_name}.clean.fasta")
-    log:
-        LOGDIR/"clean_headers"/"{gene_name}.log"
-    shell:
-        """
-        exec >{log}
-        exec 2>&1
-
-        sed -e 's/_[0-9]\{{5\}}\($\| .*\)//' \
-            -e 's/_R_//g' \
-            -e 's/;.*//g' {input.fasta} > {output}
-        """
 
 rule align:
     threads: config["MAFFT"]["N_CORES"]
     conda: "../envs/mafft.yaml"
     shadow: "minimal"
     input:
-        fasta = PATHALN/"{gene_name}.clean.fasta"
+        fasta = TARGET_DIR/"{gene_name}.fasta"
     output:
         aligned = PATHALN/"{gene_name}.mafft.fasta"
     log:
@@ -32,7 +15,10 @@ rule align:
         exec 2>&1
 
         mafft --thread {threads} \
-            --adjustdirection {input.fasta} > {output.aligned}
+            --adjustdirection {input.fasta} \
+         sed -e 's/_[0-9]\{{5\}}\($\| .*\)//' \ # remove prokka IDs
+            -e 's/_R_//g' \
+            -e 's/;.*//g > {output.aligned}
         """
 
 rule generate_consensus:
