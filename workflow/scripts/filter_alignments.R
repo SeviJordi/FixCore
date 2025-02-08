@@ -93,7 +93,7 @@ if (nlines >= as.numeric(snakemake@params[["max_consecutve_variants"]])){
             any(REF != "X") & any(ALT != "X") # Remove all groups that are gaps
             ) %>% 
         count() %>%
-        filter(n >= 3 ) %>%
+        filter(n >= as.numeric(snakemake@params["max_consecutve_variants"]) ) %>%
         group_by(isolate) %>%
         distinct(isolate)
 
