@@ -1,0 +1,6 @@
+channels:
+  - bioconda
+dependencies:
+  - panacota=1.4.0
+  - panaroo=1.5.1
+  - roary=3.13.0

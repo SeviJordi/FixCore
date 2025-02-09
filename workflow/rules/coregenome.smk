@@ -11,6 +11,7 @@ rule panaroo:
         gff = expand(PROKKA_DIR/"{genome_name}/{genome_name}.gff", genome_name=iter_genome_names())
     output:
         out = directory(OUTDIR/config["CORE"]["TOOL"])
+    shell:
         """
         panaroo -i {input.gff} \
             -o {output.out} \

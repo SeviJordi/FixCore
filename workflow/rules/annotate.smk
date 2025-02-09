@@ -1,3 +1,4 @@
+
 rule annotate:
     threads: config["PROKKA"]["N_CORES"]
     conda: "../envs/prokka.yaml" # TODO: create env
