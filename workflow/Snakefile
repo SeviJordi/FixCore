@@ -14,32 +14,49 @@ configfile: "config/config.yaml"
 configfile: "config/target.yaml"
 
 # Read target directory and set working tree
-TARGET_DIR = Path(config["GENES_DIR"])
 PREFIX = config["PREFIX"]
 OUTDIR = Path(config["OUTDIR"])
-PATHFIXCORE = Path(OUTDIR/"PREPROCESING")
+PATHFIXCORE = Path(OUTDIR/"FIXCORE_PREPROCESING")
 PATHALN = Path(PATHFIXCORE/"ALN")
 PATHCONS = Path(PATHFIXCORE/"CONS")
-PATHCURATED = Path(OUTDIR/"DEF_GENES")
-PATHPHYLO = Path(OUTDIR/"PHYLO")
+PATHCURATED = Path(OUTDIR/"FIXCORE_GENES")
+PATHPHYLO = Path(OUTDIR/"FIXCORE_PHYLO")
 LOGDIR = OUTDIR/"LOGS"
 TEMP_DIR = Path(OUTDIR/"TEMP")
 
+# Set target dir
+PATHPAN = Path(OUTDIR/config["CORE"]["TOOL"])
+if config["CORE"]["TOOL"] == "none":
+    TARGET_DIR = Path(config["GENES_DIR"])
+elif config["CORE"]["TOOL"] in ["panacota", "panaroo", "roary"]:
+    TARGET_DIR = Path(PATHPAN/"core_gene_families")
+else:
+    print("ERROR: Select a valid tool for core genome constriction: roary, panacota or panaroo")
+    exit(1)
+
 # Create directories
-directories = [OUTDIR, PATHFIXCORE, PATHALN, PATHCONS, PATHCURATED, PATHPHYLO, TEMP_DIR]
+directories = [OUTDIR, PATHFIXCORE, PATHALN, PATHCONS, PATHCURATED, PATHPHYLO, TEMP_DIR, PATHPAN]
 for directory in directories:
     directory.mkdir(parents=True, exist_ok=True)
 
-# Useful functions
-def iter_gene_names():
-    for file in listdir(TARGET_DIR):
-        yield file.replace(config["EXTENSION"], "")
-        
+# Create annotation dir if necesary
+if config["CORE"]["TOOL"] in ["panaroo", "roary"]:
+    PROKKA_DIR = Path(OUTDIR/"PROKKA")
+    PROKKA_DIR.mkdir(parents=True, exist_ok=True)
+
 # Include rules
 include: "rules/msa.smk"
 include: "rules/phylo.smk"
 include: "rules/fixcore.smk"
 include: "rules/trimal.smk"
+
+# Usefull functions
+
+def iter_genome_names(path: Path=config["GENOMES_DIR"]):
+    for file in path.glob("*.fasta"):
+        if not file.name.startswith("."):
+            file.name.split(".")[0]
+
 
 # Set final file
 rule all:
