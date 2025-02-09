@@ -50,6 +50,10 @@ def iter_genome_names(path: Path=config["GENOMES_DIR"]):
         if not file.name.startswith("."):
             file.name.split(".")[0]
 
+def iter_gene_names():
+    for file in listdir(TARGET_DIR):
+        yield file.replace(".fasta", "")
+
 
 # Include rules
 include: "rules/msa.smk"
