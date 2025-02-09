@@ -44,19 +44,18 @@ if config["CORE"]["TOOL"] in ["panaroo", "roary"]:
     PROKKA_DIR = Path(OUTDIR/"PROKKA")
     PROKKA_DIR.mkdir(parents=True, exist_ok=True)
 
-# Include rules
-include: "rules/msa.smk"
-include: "rules/phylo.smk"
-include: "rules/fixcore.smk"
-include: "rules/trimal.smk"
-
 # Usefull functions
-
 def iter_genome_names(path: Path=config["GENOMES_DIR"]):
     for file in path.glob("*.fasta"):
         if not file.name.startswith("."):
             file.name.split(".")[0]
 
+
+# Include rules
+include: "rules/msa.smk"
+include: "rules/phylo.smk"
+include: "rules/fixcore.smk"
+include: "rules/trimal.smk"
 
 # Set final file
 rule all:
