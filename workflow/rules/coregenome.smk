@@ -70,7 +70,7 @@ rule panacota_sample_sheet:
     input:
         fastas = expand(GENOMES_DIR/"{genome_name}.fasta", genome_name=iter_genome_names())
     output:
-        PATHPAN/"sample_sheet.lst
+        PATHPAN/"sample_sheet.lst"
     log:
         LOGDIR/"panacota"/"sample_sheet.log"
     shell:
