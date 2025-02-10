@@ -63,6 +63,73 @@ rule roary:
             {params.extra_params} {input.gff}
         """
 
+
+rule panacota_sample_sheet:
+    params:
+        outdir = PATHPAN
+    input:
+        fastas = expand(GENOMES_DIR/"{genome_name}.fasta", genome_name=iter_genome_names())
+    output:
+        PATHPAN/"sample_sheet.lst
+    log:
+        LOGDIR/"panacota"/"sample_sheet.log"
+    shell:
+        """
+        exec >{log}
+        exec 2>&1
+
+        mkdir -p {params.outdir}
+
+        for file in {input.fastas}; do
+            echo "$file :: $(basename $file .fasta)"
+        done > {output}
+        """
+
+rule panacota_annotate:
+    threads: config["CORE"]["N_CORES"]
+    conda: "../envs/panacota.yaml"
+    params:
+        out = PATHPAN,
+        genomes = GENOMES_DIR
+    input:
+        sample_sheet = PATHPAN/"sample_sheet.lst
+    output:
+        listfile = PATHPAN/"annotation/LSTINFO_sample_sheet.lst",
+    log:
+        LOGDIR/"panacota"/"annotate.log"
+    shell:
+        """
+        exec >{log}
+        exec 2>&1
+
+        run_panacota.py annotate --nbcont 2000 \
+            --l90 500 \
+            --cutn 0 \
+            -r {params.out}/annotation \
+            --threads {threads} \
+            -l {input.sample_sheet} \
+            -q \
+            -d {params.genomes}
+        """  
+
+rule panacota_pangenome:
+    threads: config["CORE"]["N_CORES"]
+    conda: "../envs/panacota.yaml"
+    params:
+        out = PATHPAN,
+        genomes = GENOMES_DIR
+    input:
+        listfile = PATHPAN/"annotation/LSTINFO_sample_sheet.lst"
+    output:
+    log:
+        LOGDIR/"panacota"/"pangenome.log"
+    shell:
+        """
+        exec >{log}
+        exec 2>&1
+        
+        """
+
 checkpoint select_core_genes:
     params:
         pantool = config["CORE"]["TOOL"],

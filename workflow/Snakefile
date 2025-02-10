@@ -22,11 +22,13 @@ PATHCURATED = Path(OUTDIR/"FIXCORE_GENES")
 PATHPHYLO = Path(OUTDIR/"FIXCORE_PHYLO")
 LOGDIR = Path(OUTDIR/"LOGS")
 TEMP_DIR = Path(OUTDIR/"TEMP")
+GENOMES_DIR = Path(config["GENOMES_DIR"])
+GENES_DIR = Path(config["GENES_DIR"])
 
 # Set target dir
 PATHPAN = Path(OUTDIR/config["CORE"]["TOOL"])
 if config["CORE"]["TOOL"] == "none":
-    TARGET_DIR = Path(config["GENES_DIR"])
+    TARGET_DIR = GENES_DIR
 elif config["CORE"]["TOOL"] in ["panacota", "panaroo", "roary"]:
     TARGET_DIR = Path(PATHPAN/"core_gene_families")
 
