@@ -36,8 +36,8 @@ rule roary:
     threads: config["CORE"]["N_CORES"]
     conda: "../envs/roary.yaml"
     params:
-        threshold = config["CORE"]["THRESHOLD"]*100,
-        family_threshold = config["CORE"]["PANAROO"]["FAMILY_THRESHOLD"]*100,
+        threshold = config["CORE"]["THRESHOLD"]*100 if config["CORE"]["THRESHOLD"] < 1 else config["CORE"]["THRESHOLD"],
+        family_threshold = config["CORE"]["PANAROO"]["FAMILY_THRESHOLD"]*100 if config["CORE"]["PANAROO"]["FAMILY_THRESHOLD"] < 1 else config["CORE"]["PANAROO"]["FAMILY_THRESHOLD"],
         extra_params = config["CORE"]["ROARY"]["EXTRA_PARAMS"],
         out = PATHPAN
     input:
