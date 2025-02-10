@@ -50,7 +50,7 @@ jobs:
           snakefile: 'workflow/Snakefile'
           args: '--configfile config/config.yaml .test/targets.yaml --dry-run'
           stagein: '' # additional preliminary commands to run (can be multiline)
-  run_test_pipeline:
+  run_test_pipeline_on_genes:
     runs-on: ubuntu-latest
     needs: Dry_run
     steps:
@@ -63,4 +63,18 @@ jobs:
           directory: '.test'
           snakefile: 'workflow/Snakefile'
           args: '--configfile config/config.yaml .test/targets.yaml --use-conda -c1'
+          stagein: '' # additional preliminary commands to run (can be multiline)
+  run_test_pipeline_on_genomes_panaroo:
+    runs-on: ubuntu-latest
+    needs: Dry_run
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - name: Run test pipeline
+        uses: snakemake/snakemake-github-action@v1
+        with:
+          directory: '.test'
+          snakefile: 'workflow/Snakefile'
+          args: '--configfile .test/config_panaroo.yaml .test/targets.yaml --use-conda -c32'
           stagein: '' # additional preliminary commands to run (can be multiline)
