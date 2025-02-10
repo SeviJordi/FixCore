@@ -32,6 +32,36 @@ rule panaroo:
             {params.extra_params}
         """
 
+rule roary:
+    threads: config["CORE"]["N_CORES"]
+    conda: "../envs/roary.yaml"
+    params:
+        threshold = config["CORE"]["THRESHOLD"]*100,
+        family_threshold = config["CORE"]["PANAROO"]["FAMILY_THRESHOLD"]*100,
+        extra_params = config["CORE"]["ROARY"]["EXTRA_PARAMS"],
+        out = PATHPAN
+    input:
+        gff = expand(PROKKA_DIR/"{genome_name}/{genome_name}.gff", genome_name=iter_genome_names())
+    output:  
+        flag = temp(".roary_done")
+    log:
+        LOGDIR/"roary"/"roary.log"
+    shell:
+        """
+        exec >{log}
+        exec 2>&1
+
+        touch {output.flag}
+        
+        roary -e \
+            --mafft \
+            -p {threads} \
+            -i {params.family_threshold} \
+            -f {params.out} \
+            -v -z \
+            -cd {params.threshold} \
+            {params.extra_params} {input.gff}
+        """
 
 checkpoint select_core_genes:
     params:
