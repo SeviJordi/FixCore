@@ -92,7 +92,7 @@ rule panacota_annotate:
         out = PATHPAN,
         genomes = GENOMES_DIR
     input:
-        sample_sheet = PATHPAN/"sample_sheet.lst
+        sample_sheet = PATHPAN/"sample_sheet.lst"
     output:
         listfile = PATHPAN/"annotation/LSTINFO_sample_sheet.lst",
     log:
