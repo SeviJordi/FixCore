@@ -1,4 +1,5 @@
 
+
 rule align:
     threads: config["MAFFT"]["N_CORES"]
     conda: "../envs/mafft.yaml"

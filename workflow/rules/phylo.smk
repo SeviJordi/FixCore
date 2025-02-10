@@ -1,3 +1,7 @@
+def aggregate_input(wildcards):
+    checkpoint_output = checkpoints.select_core_genes.get(**wildcards).output[0]
+    return glob_wildcards(TARGET_DIR/"{gene_name}.fasta").gene_name
+
 rule concat_alignments:
     threads: 8
     conda:
@@ -5,7 +9,7 @@ rule concat_alignments:
     params:
         temp_dir = TEMP_DIR
     input:
-        fastas = expand(PATHCURATED/"{gene_name}.mafft.evalmsa.trimmal.fasta", gene_name=iter_gene_names())
+        fastas = expand(PATHCURATED/"{gene_name}.mafft.evalmsa.trimmal.fasta", gene_name=aggregate_input)
     output:
         concatenated = OUTDIR/f"{PREFIX}.concatenated.fixcore.fasta",
         partitions = OUTDIR/f"{PREFIX}.concatenated.fixcore.partitions"

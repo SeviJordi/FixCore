@@ -8,9 +8,14 @@ rule annotate:
         genome = Path(config["GENOMES_DIR"])/"{genome_name}.fasta"
     output:
         gff = PROKKA_DIR/"{genome_name}/{genome_name}.gff"
+    log:
+        LOGDIR/"annotate"/"{genome_name}.log"
     shell:
         """
+        exec >{log}
+        exec 2>&1
+
         prokka --cpus {threads} \
             --outdir {params.outdir}/{wildcards.genome_name} \
-            --prefix {wildcards.genome_name} {input.genome}
+            --prefix {wildcards.genome_name} {input.genome} --force
         """
