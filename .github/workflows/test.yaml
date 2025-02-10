@@ -49,7 +49,7 @@ jobs:
         with:
           directory: '.test'
           snakefile: 'workflow/Snakefile'
-          args: '.panaroo_done --configfile .test/config_panaroo.yaml .test/targets.yaml --use-conda -c32'
+          args: ' --configfile .test/config_panaroo.yaml .test/targets.yaml --use-conda -c32'
           stagein: '' # additional preliminary commands to run (can be multiline)
   run_test_roary_core:
     runs-on: ubuntu-latest
@@ -66,5 +66,5 @@ jobs:
         with:
           directory: '.test'
           snakefile: 'workflow/Snakefile'
-          args: '.roary_done --configfile .test/config_roary.yaml .test/targets.yaml --use-conda -c32'
+          args: ' --configfile .test/config_roary.yaml .test/targets.yaml --use-conda -c32'
           stagein: '' # additional preliminary commands to run (can be multiline)
