@@ -1,7 +1,7 @@
 def aggregate_input(wildcards):
     checkpoint_output = checkpoints.select_core_genes.get(**wildcards).output[0]
     return glob_wildcards(TARGET_DIR/"{gene_name}.fasta").gene_name
-
+    
 rule concat_alignments:
     threads: 8
     conda:

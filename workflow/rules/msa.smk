@@ -1,11 +1,13 @@
-
+def input_mafft(wildcards):
+    checkpoint_output = checkpoints.select_core_genes.get(**wildcards).output[0]
+    return TARGET_DIR/f"{wildcards.gene_name}.fasta"
 
 rule align:
     threads: config["MAFFT"]["N_CORES"]
     conda: "../envs/mafft.yaml"
     shadow: "minimal"
     input:
-        fasta = TARGET_DIR/"{gene_name}.fasta"
+        fasta = input_mafft
     output:
         aligned = PATHALN/"{gene_name}.mafft.fasta"
     log:
@@ -29,7 +31,7 @@ rule generate_consensus:
     input:
         aligned = PATHALN/"{gene_name}.mafft.fasta"
     output:
-        consensus = PATHCONS/"{gene_name}.consensus.fasta"
+        consensus = temp(PATHCONS/"{gene_name}.consensus.fasta")
     log:
         LOGDIR/"consensus"/"{gene_name}.log"
     script:
@@ -41,7 +43,7 @@ rule add_consensus:
         consensus = PATHCONS/"{gene_name}.consensus.fasta",
         aln = PATHALN/"{gene_name}.mafft.fasta"
     output:
-        with_consensus = PATHCONS/"{gene_name}.mafft.concat.fasta",
+        with_consensus = temp(PATHCONS/"{gene_name}.mafft.concat.fasta"),
     log:
         LOGDIR/"add_consensus"/"{gene_name}.log"
     shell:
@@ -61,7 +63,7 @@ rule translate:
     input:
         PATHCONS/"{gene_name}.mafft.concat.fasta"
     output:
-        translated = PATHCONS/"{gene_name}.mafft.concat.aa.fasta"
+        translated = temp(PATHCONS/"{gene_name}.mafft.concat.aa.fasta")
     log:
         LOGDIR/"translate"/"{gene_name}.log"
     shell:
@@ -92,6 +94,7 @@ rule generate_vcf:
         """
         exec >{log}
         exec 2>&1
-
+        set +o pipefail
+        
         snp-sites -v {input.translated} | cat > {output.vcf}
         """

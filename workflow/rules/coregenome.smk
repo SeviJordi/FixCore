@@ -11,7 +11,7 @@ rule panaroo:
     input:
         gff = expand(PROKKA_DIR/"{genome_name}/{genome_name}.gff", genome_name=iter_genome_names())
     output:  
-        flag = temp(".panaroo_done")
+        flag = OUTDIR/".panaroo_done"
     log:
         LOGDIR/"panaroo"/"panaroo.log"
     shell:
@@ -43,7 +43,7 @@ rule roary:
     input:
         gff = expand(PROKKA_DIR/"{genome_name}/{genome_name}.gff", genome_name=iter_genome_names())
     output:  
-        flag = temp(".roary_done")
+        flag = OUTDIR/".roary_done"
     log:
         LOGDIR/"roary"/"roary.log"
     shell:
@@ -121,6 +121,7 @@ rule panacota_pangenome:
     input:
         listfile = PATHPAN/"annotation/LSTINFO_sample_sheet.lst"
     output:
+        ""
     log:
         LOGDIR/"panacota"/"pangenome.log"
     shell:
@@ -134,9 +135,10 @@ checkpoint select_core_genes:
     params:
         pantool = config["CORE"]["TOOL"],
         tar_dir = TARGET_DIR,
-        indir = OUTDIR/config["CORE"]["TOOL"]
+        indir = OUTDIR/config["CORE"]["TOOL"],
+        fix_genes = PATHCURATED
     input:
-        done = f".{config['CORE']['TOOL']}_done"
+        done = OUTDIR/f".{config['CORE']['TOOL']}_done"
     output:
         directory(TARGET_DIR)
     log:
@@ -147,6 +149,16 @@ checkpoint select_core_genes:
         exec 2>&1
 
         mkdir -p {params.tar_dir}
+        rm {input.done}
+
+        if ls {params.tar_dir}*.fasta &> /dev/null; then
+            rm {params.tar_dir}/*
+        fi
+
+        if ls {params.fix_genes}*.fasta &> /dev/null; then
+            rm {params.fix_genes}/*
+        fi
+
 
         if [[ "{params.pantool}" == "panacota" ]]; then
             for file in {params.indir}/**/.gen; do
