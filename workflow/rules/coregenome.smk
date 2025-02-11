@@ -37,7 +37,7 @@ rule roary:
     conda: "../envs/roary.yaml"
     params:
         threshold = config["CORE"]["THRESHOLD"]*100 if config["CORE"]["THRESHOLD"] < 1 else config["CORE"]["THRESHOLD"],
-        family_threshold = config["CORE"]["PANAROO"]["FAMILY_THRESHOLD"]*100 if config["CORE"]["PANAROO"]["FAMILY_THRESHOLD"] < 1 else config["CORE"]["PANAROO"]["FAMILY_THRESHOLD"],
+        family_threshold = config["CORE"]["ROARY"]["FAMILY_THRESHOLD"]*100 if config["CORE"]["ROARY"]["FAMILY_THRESHOLD"] < 1 else config["CORE"]["ROARY"]["FAMILY_THRESHOLD"],
         extra_params = config["CORE"]["ROARY"]["EXTRA_PARAMS"],
         out = PATHPAN
     input:
@@ -53,6 +53,7 @@ rule roary:
 
         touch {output.flag}
         
+        [[ -d {params.out} ]] && rm -r {params.out}
         roary -e \
             --mafft \
             -p {threads} \
@@ -132,11 +133,13 @@ rule panacota_pangenome:
         """
 
 checkpoint select_core_genes:
+    conda: "../envs/common.yaml"
     params:
         pantool = config["CORE"]["TOOL"],
         tar_dir = TARGET_DIR,
         indir = OUTDIR/config["CORE"]["TOOL"],
-        fix_genes = PATHCURATED
+        fix_genes = PATHCURATED,
+        concatenated = OUTDIR/f"{PREFIX}.concatenated.fixcore.fasta"
     input:
         done = OUTDIR/f".{config['CORE']['TOOL']}_done"
     output:
@@ -159,6 +162,7 @@ checkpoint select_core_genes:
             rm {params.fix_genes}/*
         fi
 
+        [[ -f {params.concatenated} ]] && rm {params.concatenated}
 
         if [[ "{params.pantool}" == "panacota" ]]; then
             for file in {params.indir}/**/.gen; do

@@ -66,4 +66,6 @@ include: "rules/coregenome.smk"
 # Set final file
 rule all:
     input:
-        PATHPHYLO/f"{PREFIX}.treefile"
+        PATHPHYLO/f"{PREFIX}.treefile",
+        OUTDIR/f"{PREFIX}.concatenated.fixcore.fasta",
+

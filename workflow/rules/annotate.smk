@@ -15,7 +15,11 @@ rule annotate:
         exec >{log}
         exec 2>&1
 
+        sed "s/ .*//g" {input.genome} > {input.genome}.renamed
+
         prokka --cpus {threads} \
             --outdir {params.outdir}/{wildcards.genome_name} \
-            --prefix {wildcards.genome_name} {input.genome} --force
+            --prefix {wildcards.genome_name} {input.genome}.renamed --force
+        
+        rm {input.genome}.renamed
         """
