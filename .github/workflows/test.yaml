@@ -66,5 +66,5 @@ jobs:
         with:
           directory: '.test'
           snakefile: 'workflow/Snakefile'
-          args: ' --configfile .test/config_roary.yaml .test/targets.yaml --use-conda -c2
+          args: ' --configfile .test/config_roary.yaml .test/targets.yaml --use-conda -c2'
           stagein: '' # additional preliminary commands to run (can be multiline)
