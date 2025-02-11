@@ -118,19 +118,51 @@ rule panacota_pangenome:
     conda: "../envs/panacota.yaml"
     params:
         out = PATHPAN,
-        genomes = GENOMES_DIR
+        genomes = GENOMES_DIR,
+        prefix = PREFIX
     input:
         listfile = PATHPAN/"annotation/LSTINFO_sample_sheet.lst"
     output:
-        ""
+        pangenome = PATHPAN/f"pangenome/{PREFIX}_pangenome.lst",
     log:
         LOGDIR/"panacota"/"pangenome.log"
     shell:
         """
         exec >{log}
         exec 2>&1
-        
+
+        run_panacota.py pangenome -l $output_dir/annotation/LSTINFO-*.lst \
+            -n {params.prefix} \
+            -d {params.out}/annotation/Proteins \
+            -o {params.out}/pangenome \
+            --threads {threads} \
+            -q \
+            -f {output.pangenome} 
         """
+
+rule panacota_corepers:
+    threads: config["CORE"]["N_CORES"]
+    conda: "../envs/panacota.yaml"
+    params:
+        out = PATHPAN,
+        genomes = GENOMES_DIR,
+        prefix = PREFIX,
+        threshold = config["CORE"]["THRESHOLD"]
+    input:
+        pangenome = PATHPAN/f"pangenome/{PREFIX}_pangenome.lst"
+    output:
+        dir_corepers = directory(PATHPAN/f"corepers/")
+    shell:
+        """
+        exec >{log}
+        exec 2>&1
+
+        run_panacota.py corepers -p {input.pangenome} \
+            -t {params.threshold} \
+            -o {output.dir_corepers}
+        """
+
+
 
 checkpoint select_core_genes:
     conda: "../envs/common.yaml"
