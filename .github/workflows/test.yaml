@@ -30,6 +30,7 @@ jobs:
       - name: Run test pipeline
         uses: snakemake/snakemake-github-action@v1
         with:
+          snakemake-version: '8.20.5'
           directory: '.test'
           snakefile: 'workflow/Snakefile'
           args: '--configfile config/config.yaml .test/targets.yaml --use-conda -c1'
@@ -47,6 +48,7 @@ jobs:
       - name: Run test pipeline
         uses: snakemake/snakemake-github-action@v1
         with:
+          snakemake-version: '8.20.5'
           directory: '.test'
           snakefile: 'workflow/Snakefile'
           args: ' --configfile .test/config_panaroo.yaml .test/targets.yaml --use-conda -c2'
@@ -64,6 +66,7 @@ jobs:
       - name: Run test pipeline
         uses: snakemake/snakemake-github-action@v1
         with:
+          snakemake-version: '8.20.5'
           directory: '.test'
           snakefile: 'workflow/Snakefile'
           args: ' --configfile .test/config_roary.yaml .test/targets.yaml --use-conda -c2'
