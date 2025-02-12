@@ -30,9 +30,8 @@ jobs:
       - name: Setup mamba
         uses: conda-incubator/setup-miniconda@v2
         with:
-          mamba-version: '1.5.3'
-          conda-version: '23.9.0'
-          python-version: '3.12.6'
+          environment-file: .test/snakemake_env.yaml
+          activate-environment: "snakemake"
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
           activate-environment: ""
@@ -53,10 +52,9 @@ jobs:
       - name: Setup mamba
         uses: conda-incubator/setup-miniconda@v2
         with:
-          mamba-version: '1.5.3'
-          conda-version: '23.9.0'
-          python-version: '3.12.6'
+          environment-file: .test/snakemake_env.yaml
           channels: conda-forge,bioconda,defaults
+          activate-environment: "snakemake"
           auto-activate-base: true
           activate-environment: ""
       - name: Install dependencies
@@ -76,9 +74,8 @@ jobs:
       - name: Setup mamba
         uses: conda-incubator/setup-miniconda@v2
         with:
-          mamba-version: '1.5.3'
-          conda-version: '23.9.0'
-          python-version: '3.12.6'
+          environment-file: .test/snakemake_env.yaml
+          activate-environment: "snakemake"
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
           activate-environment: ""
@@ -99,9 +96,8 @@ jobs:
       - name: Setup mamba
         uses: conda-incubator/setup-miniconda@v2
         with:
-          mamba-version: '1.5.3'
-          conda-version: '23.9.0'
-          python-version: '3.12.6'
+          environment-file: .test/snakemake_env.yaml
+          activate-environment: "snakemake"
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
           activate-environment: ""
