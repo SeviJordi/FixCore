@@ -31,6 +31,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@v2
         with:
           mamba-version: '1.5.3'
+          conda-version: '23.9.0'
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
           activate-environment: ""
@@ -52,6 +53,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@v2
         with:
           mamba-version: '1.5.3'
+          conda-version: '23.9.0'
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
           activate-environment: ""
@@ -73,6 +75,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@v2
         with:
           mamba-version: '1.5.3'
+          conda-version: '23.9.0'
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
           activate-environment: ""
@@ -94,6 +97,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@v2
         with:
           mamba-version: '1.5.3'
+          conda-version: '23.9.0'
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
           activate-environment: ""
