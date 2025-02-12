@@ -50,4 +50,4 @@ CORE:
       MODE: "multi"
       EXTRA_PARAMS: ""
     ALIGN:
-      EXTRA_PARAMS: """
+      EXTRA_PARAMS: ""
