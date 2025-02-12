@@ -71,3 +71,21 @@ jobs:
           snakefile: 'workflow/Snakefile'
           args: ' --configfile .test/config_roary.yaml .test/targets.yaml --use-conda -c2'
           stagein: '' # additional preliminary commands to run (can be multiline)
+  run_test_panacota_core:
+    runs-on: ubuntu-latest
+    needs: skip_duplicates
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - name: Run test pipeline
+        uses: snakemake/snakemake-github-action@v2
+        with:
+          snakemake-version: '8.20.5'
+          directory: '.test'
+          snakefile: 'workflow/Snakefile'
+          args: ' --configfile .test/config_panacota.yaml .test/targets.yaml --use-conda -c2'
+          stagein: '' # additional preliminary commands to run (can be multiline)
