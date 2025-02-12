@@ -34,6 +34,8 @@ jobs:
           activate-environment: "snakemake"
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
+      - name: Install dependencies
+        run: pip install 'snakemake==8.20.5' 'pulp'
       - name: Run test pipeline
         run: snakemake --use-conda -s workflow/Snakefile --directory .test --configfile config/config.yaml .test/targets.yaml -c2 --conda-frontend conda
   run_test_panaroo_core:
@@ -53,6 +55,8 @@ jobs:
           channels: conda-forge,bioconda,defaults
           activate-environment: "snakemake"
           auto-activate-base: true
+      - name: Install dependencies
+        run: pip install 'snakemake==8.20.5' 'pulp'
       - name: Run test pipeline
         run: snakemake --use-conda -s workflow/Snakefile --directory .test --configfile .test/config_panaroo.yaml .test/targets.yaml -c2 --conda-frontend conda
   run_test_roary_core:
@@ -72,6 +76,8 @@ jobs:
           activate-environment: "snakemake"
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
+      - name: Install dependencies
+        run: pip install 'snakemake==8.20.5' 'pulp'
       - name: Run test pipeline
         run: snakemake --use-conda -s workflow/Snakefile --directory .test --configfile .test/config_panaroo.yaml .test/targets.yaml -c2 --conda-frontend conda
   run_test_panacota_core:
@@ -91,5 +97,7 @@ jobs:
           activate-environment: "snakemake"
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
+      - name: Install dependencies
+        run: pip install 'snakemake==8.20.5' 'pulp'
       - name: Run test pipeline
         run: snakemake --use-conda -s workflow/Snakefile --directory .test --configfile .test/config_panacota.yaml .test/targets.yaml -c2 --conda-frontend conda
