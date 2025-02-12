@@ -1,5 +1,7 @@
 GENES_DIR:
   ""
+GENOMES_DIR:
+  ""
 PREFIX:
   ""
 OUTDIR:

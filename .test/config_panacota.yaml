@@ -27,7 +27,7 @@ PRUNE_TREES:
 
 CORE:
   N_CORES: 32
-  TOOL: "none"
+  TOOL: "panacota"
   THRESHOLD: 0.90
   ROARY:
     FAMILY_THRESHOLD: 95
@@ -38,7 +38,7 @@ CORE:
     CLEAN_MODE: "sensitive"
   PANACOTA:
     FAMILY_THRESHOLD: 0.8
-    NAME: ""
+    NAME: "KLPN"
     ANNOTATE:
       L90: 500
       NBCONT: 2000
@@ -51,4 +51,3 @@ CORE:
       EXTRA_PARAMS: ""
     ALIGN:
       EXTRA_PARAMS: ""
-    

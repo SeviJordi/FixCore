@@ -1,47 +1,79 @@
-# TODO
 import sys
 from pathlib import Path
 from os import listdir
+import snakemake
 from snakemake.utils import min_version
 import subprocess
 
 # Set minimum version of snakemake to work with
 min_version("8.20")
 
+# Cheeck if it is the correct version of snakemake (8.20.5) The newer version (8.27.1) have a bug using the checkpoint
+if snakemake.__version__ != "8.20.5":
+    print("ERROR: Use snakemake version 8.20.5")
+    print("Current version: ", snakemake.__version__)
+    print("Please install the correct version using the following command:")
+    print("conda install -c bioconda -c conda-forge snakemake=8.20.5")
+    exit(1)
 
 # Load configuration files
 configfile: "config/config.yaml"
 configfile: "config/target.yaml"
 
 # Read target directory and set working tree
-TARGET_DIR = Path(config["GENES_DIR"])
 PREFIX = config["PREFIX"]
 OUTDIR = Path(config["OUTDIR"])
-PATHFIXCORE = Path(OUTDIR/"PREPROCESING")
+PATHFIXCORE = Path(OUTDIR/"FIXCORE_PREPROCESING")
 PATHALN = Path(PATHFIXCORE/"ALN")
 PATHCONS = Path(PATHFIXCORE/"CONS")
-PATHCURATED = Path(OUTDIR/"DEF_GENES")
-PATHPHYLO = Path(OUTDIR/"PHYLO")
-LOGDIR = OUTDIR/"LOGS"
+PATHCURATED = Path(OUTDIR/"FIXCORE_GENES")
+PATHPHYLO = Path(OUTDIR/"FIXCORE_PHYLO")
+LOGDIR = Path(OUTDIR/"LOGS")
 TEMP_DIR = Path(OUTDIR/"TEMP")
+GENOMES_DIR = Path(config["GENOMES_DIR"])
+GENES_DIR = Path(config["GENES_DIR"])
+
+# Set target dir
+PATHPAN = Path(OUTDIR/config["CORE"]["TOOL"])
+if config["CORE"]["TOOL"] == "none":
+    TARGET_DIR = GENES_DIR
+elif config["CORE"]["TOOL"] in ["panacota", "panaroo", "roary"]:
+    TARGET_DIR = Path(PATHPAN/"core_gene_families")
+
+else:
+    print("ERROR: Select a valid tool for core genome constriction: roary, panacota or panaroo")
+    exit(1)
 
 # Create directories
 directories = [OUTDIR, PATHFIXCORE, PATHALN, PATHCONS, PATHCURATED, PATHPHYLO, TEMP_DIR]
-for directory in directories:
-    directory.mkdir(parents=True, exist_ok=True)
+for dir in directories:
+    dir.mkdir(parents=True, exist_ok=True)
 
-# Useful functions
-def iter_gene_names():
-    for file in listdir(TARGET_DIR):
-        yield file.replace(config["EXTENSION"], "")
-        
+# Create annotation dir if necesary
+PROKKA_DIR = Path(OUTDIR/"PROKKA")
+if config["CORE"]["TOOL"] in ["panaroo", "roary"]:
+    PROKKA_DIR.mkdir(parents=True, exist_ok=True)
+
+# Usefull functions
+def iter_genome_names(path=config["GENOMES_DIR"]):
+    for file in [f for f in listdir(path) if f.endswith(".fasta") and not f.startswith(".")]:
+        yield file.replace(".fasta", "")
+
+def iter_gene_names(wildcards):
+    return glob_wildcards(TARGET_DIR/"{gene_name}.fasta").gene_name
+
+
 # Include rules
 include: "rules/msa.smk"
 include: "rules/phylo.smk"
 include: "rules/fixcore.smk"
 include: "rules/trimal.smk"
+include: "rules/annotate.smk"
+include: "rules/coregenome.smk"
 
 # Set final file
 rule all:
     input:
-        PATHPHYLO/f"{PREFIX}.treefile"
+        PATHPHYLO/f"{PREFIX}.treefile",
+        OUTDIR/f"{PREFIX}.concatenated.fixcore.fasta",
+

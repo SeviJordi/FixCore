@@ -27,7 +27,7 @@ PRUNE_TREES:
 
 CORE:
   N_CORES: 32
-  TOOL: "none"
+  TOOL: "panaroo"
   THRESHOLD: 0.90
   ROARY:
     FAMILY_THRESHOLD: 95
@@ -51,4 +51,3 @@ CORE:
       EXTRA_PARAMS: ""
     ALIGN:
       EXTRA_PARAMS: ""
-    

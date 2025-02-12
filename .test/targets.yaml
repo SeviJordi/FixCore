@@ -1,7 +1,7 @@
 GENES_DIR:
   "alignments"
-EXTENSION:
-  ".fasta"
+GENOMES_DIR:
+  "genomes"
 PREFIX:
   "TEST"
 OUTDIR:
