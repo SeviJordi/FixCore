@@ -1,12 +1,20 @@
 import sys
 from pathlib import Path
 from os import listdir
+import snakemake
 from snakemake.utils import min_version
 import subprocess
 
 # Set minimum version of snakemake to work with
 min_version("8.20")
 
+# Cheeck if it is the correct version of snakemake (8.20.5) The newer version (8.27.1) have a bug using the checkpoint
+if snakemake.__version__ != "8.20.5":
+    print("ERROR: Use snakemake version 8.20.5")
+    print("Current version: ", snakemake.__version__)
+    print("Please install the correct version using the following command:")
+    print("conda install -c bioconda -c conda-forge snakemake=8.20.5")
+    exit(1)
 
 # Load configuration files
 configfile: "config/config.yaml"

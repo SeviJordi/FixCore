@@ -67,7 +67,8 @@ rule roary:
 
 rule panacota_sample_sheet:
     params:
-        outdir = PATHPAN
+        outdir = PATHPAN,
+        name = config["CORE"]["PANACOTA"]["NAME"]
     input:
         fastas = expand(GENOMES_DIR/"{genome_name}.fasta", genome_name=iter_genome_names())
     output:
@@ -82,7 +83,7 @@ rule panacota_sample_sheet:
         mkdir -p {params.outdir}
 
         for file in {input.fastas}; do
-            echo "$file :: $(basename $file .fasta)"
+            echo "$( basename $file) :: {params.name}"
         done > {output}
         """
 
@@ -91,26 +92,33 @@ rule panacota_annotate:
     conda: "../envs/panacota.yaml"
     params:
         out = PATHPAN,
-        genomes = GENOMES_DIR
+        genomes = GENOMES_DIR,
+        name = config["CORE"]["PANACOTA"]["NAME"],
+        nbcont = config["CORE"]["PANACOTA"]["ANNOTATE"]["NBCONT"],
+        l90 = config["CORE"]["PANACOTA"]["ANNOTATE"]["L90"],
+        cutn = config["CORE"]["PANACOTA"]["ANNOTATE"]["CUTN"],
+        extra_params = config["CORE"]["PANACOTA"]["ANNOTATE"]["EXTRA_PARAMS"]
     input:
         sample_sheet = PATHPAN/"sample_sheet.lst"
     output:
-        listfile = PATHPAN/"annotation/LSTINFO_sample_sheet.lst",
+        listfile = PATHPAN/"annotation/LSTINFO-sample_sheet.lst",
     log:
         LOGDIR/"panacota"/"annotate.log"
     shell:
         """
         exec >{log}
         exec 2>&1
-
-        run_panacota.py annotate --nbcont 2000 \
-            --l90 500 \
-            --cutn 0 \
+        pwd
+        run_panacota.py annotate --nbcont {params.nbcont} \
+            --l90 {params.l90} \
+            --cutn {params.cutn} \
+            -n {params.name} \
             -r {params.out}/annotation \
             --threads {threads} \
             -l {input.sample_sheet} \
             -q \
-            -d {params.genomes}
+            -d {params.genomes} \
+            {params.extra_params}
         """  
 
 rule panacota_pangenome:
@@ -118,10 +126,11 @@ rule panacota_pangenome:
     conda: "../envs/panacota.yaml"
     params:
         out = PATHPAN,
-        genomes = GENOMES_DIR,
-        prefix = PREFIX
+        prefix = PREFIX,
+        extra_params = config["CORE"]["PANACOTA"]["PANGENOME"]["EXTRA_PARAMS"],
+        family_threshold = config["CORE"]["PANACOTA"]["FAMILY_THRESHOLD"]
     input:
-        listfile = PATHPAN/"annotation/LSTINFO_sample_sheet.lst"
+        listfile = PATHPAN/"annotation/LSTINFO-sample_sheet.lst"
     output:
         pangenome = PATHPAN/f"pangenome/{PREFIX}_pangenome.lst",
     log:
@@ -131,39 +140,93 @@ rule panacota_pangenome:
         exec >{log}
         exec 2>&1
 
-        run_panacota.py pangenome -l $output_dir/annotation/LSTINFO-*.lst \
+        run_panacota.py pangenome -l {input.listfile} \
             -n {params.prefix} \
             -d {params.out}/annotation/Proteins \
             -o {params.out}/pangenome \
             --threads {threads} \
+            -i {params.family_threshold} \
             -q \
-            -f {output.pangenome} 
+            -f $( basename {output.pangenome}) \
+            {params.extra_params}
         """
 
 rule panacota_corepers:
     threads: config["CORE"]["N_CORES"]
     conda: "../envs/panacota.yaml"
     params:
-        out = PATHPAN,
-        genomes = GENOMES_DIR,
-        prefix = PREFIX,
-        threshold = config["CORE"]["THRESHOLD"]
+        threshold = config["CORE"]["THRESHOLD"],
+        extra_params = config["CORE"]["PANACOTA"]["COREPERS"]["EXTRA_PARAMS"],
+        mode = config["CORE"]["PANACOTA"]["COREPERS"]["MODE"]
     input:
         pangenome = PATHPAN/f"pangenome/{PREFIX}_pangenome.lst"
     output:
         dir_corepers = directory(PATHPAN/f"corepers/")
+    log:
+        LOGDIR/"panacota"/"corepers.log"
+    shell:
+        """
+        exec >{log}
+        exec 2>&1
+        
+        if [[ "{params.mode}" == "mixed" ]]; then
+            flag="-X"
+        elif [[ "{params.mode}" == "multi" ]]; then
+            flag="-M"
+        elif [[ "{params.mode}" == "" ]]; then
+            flag=""
+        else
+            echo "ERROR: Select a valid mode for core genome constriction: mixed or multi"
+            exit 1
+        fi
+
+        run_panacota.py corepers -p {input.pangenome} \
+            -t {params.threshold} \
+            -o {output.dir_corepers} \
+            $flag {params.extra_params}
+
+        """
+
+rule panacota_align:
+    threads: config["CORE"]["N_CORES"]
+    conda: "../envs/panacota.yaml"
+    params:
+        out = PATHPAN,
+        prefix = PREFIX,
+        threshold = config["CORE"]["THRESHOLD"],
+        extra_params = config["CORE"]["PANACOTA"]["ALIGN"]["EXTRA_PARAMS"]
+    input:
+        dir_corepers = PATHPAN/f"corepers/",
+        listfile = PATHPAN/"annotation/LSTINFO-sample_sheet.lst"
+    output:
+        directory(PATHPAN/f"alignment/Align-{PREFIX}")
+    log:
+        LOGDIR/"panacota"/"align.log"
     shell:
         """
         exec >{log}
         exec 2>&1
 
-        run_panacota.py corepers -p {input.pangenome} \
-            -t {params.threshold} \
-            -o {output.dir_corepers}
+        run_panacota.py align --threads {threads} \
+            -F \
+            -n {params.prefix} \
+            -c {input.dir_corepers}/PersGenome*{params.threshold}*.lst \
+            -l {input.listfile} \
+            -d {params.out}/annotation \
+            -o {params.out}/alignment \
+            {params.extra_params}
         """
 
-
-
+rule rename_panacota:
+    conda: "../envs/biopython.yaml"
+    input:
+        dir_al = PATHPAN/f"alignment/Align-{PREFIX}",
+        listfile = PATHPAN/"annotation/LSTINFO-sample_sheet.lst"
+    output:
+        done = OUTDIR/".panacota_done"
+    script:
+        "../scripts/rename_panacota.py"
+        
 checkpoint select_core_genes:
     conda: "../envs/common.yaml"
     params:
@@ -197,7 +260,7 @@ checkpoint select_core_genes:
         [[ -f {params.concatenated} ]] && rm {params.concatenated}
 
         if [[ "{params.pantool}" == "panacota" ]]; then
-            for file in {params.indir}/**/.gen; do
+            for file in {params.indir}/alignment/**/*.gen; do
                 name=$(basename $file .gen | sed 's/current.//')
                 cp $file {params.tar_dir}/$name.fasta
             done

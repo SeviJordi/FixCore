@@ -38,3 +38,16 @@ CORE:
     CLEAN_MODE: "sensitive"
   PANACOTA:
     FAMILY_THRESHOLD: 0.8
+    NAME: ""
+    ANNOTATE:
+      L90: 500
+      NBCONT: 2000
+      CUTN: 0
+      EXTRA_PARAMS: ""
+    PANGENOME:
+      EXTRA_PARAMS: ""
+    COREPERS:
+      MODE: "multi"
+      EXTRA_PARAMS: ""
+    ALIGN:
+      EXTRA_PARAMS: ""
