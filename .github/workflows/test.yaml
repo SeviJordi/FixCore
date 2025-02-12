@@ -79,7 +79,7 @@ jobs:
       - name: Install dependencies
         run: pip install 'snakemake==8.20.5' 'pulp'
       - name: Run test pipeline
-        run: snakemake --use-conda -s workflow/Snakefile --directory .test --configfile .test/config_panaroo.yaml .test/targets.yaml -c2 --conda-frontend conda
+        run: snakemake --use-conda -s workflow/Snakefile --directory .test --configfile .test/config_roary.yaml .test/targets.yaml -c2 --conda-frontend conda
   run_test_panacota_core:
     runs-on: ubuntu-latest
     needs: skip_duplicates
