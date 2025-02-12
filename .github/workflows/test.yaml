@@ -51,7 +51,7 @@ jobs:
           snakemake-version: '8.20.5'
           directory: '.test'
           snakefile: 'workflow/Snakefile'
-          args: ' --configfile .test/config_panaroo.yaml .test/targets.yaml --use-conda -c2'
+          args: ' --configfile .test/config_panaroo.yaml .test/targets.yaml --use-conda -c2 --conda-frontend conda'
           stagein: '' # additional preliminary commands to run (can be multiline)
   run_test_roary_core:
     runs-on: ubuntu-latest
@@ -69,7 +69,7 @@ jobs:
           snakemake-version: '8.20.5'
           directory: '.test'
           snakefile: 'workflow/Snakefile'
-          args: ' --configfile .test/config_roary.yaml .test/targets.yaml --use-conda -c2'
+          args: ' --configfile .test/config_roary.yaml .test/targets.yaml --use-conda -c2 --conda-frontend conda'
           stagein: '' # additional preliminary commands to run (can be multiline)
   run_test_panacota_core:
     runs-on: ubuntu-latest
@@ -87,5 +87,5 @@ jobs:
           snakemake-version: '8.20.5'
           directory: '.test'
           snakefile: 'workflow/Snakefile'
-          args: ' --configfile .test/config_panacota.yaml .test/targets.yaml --use-conda -c2'
+          args: ' --configfile .test/config_panacota.yaml .test/targets.yaml --use-conda -c2 --conda-frontend conda'
           stagein: '' # additional preliminary commands to run (can be multiline)
