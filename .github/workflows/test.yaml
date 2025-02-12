@@ -55,7 +55,6 @@ jobs:
           channels: conda-forge,bioconda,defaults
           activate-environment: "snakemake"
           auto-activate-base: true
-          activate-environment: ""
       - name: Install dependencies
         run: pip install 'snakemake==8.20.5' 'pulp'
       - name: Run test pipeline
@@ -77,7 +76,6 @@ jobs:
           activate-environment: "snakemake"
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
-          activate-environment: ""
       - name: Install dependencies
         run: pip install 'snakemake==8.20.5' 'pulp'
       - name: Run test pipeline
@@ -99,7 +97,6 @@ jobs:
           activate-environment: "snakemake"
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
-          activate-environment: ""
       - name: Install dependencies
         run: pip install 'snakemake==8.20.5' 'pulp'
       - name: Run test pipeline
