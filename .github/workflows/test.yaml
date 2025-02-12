@@ -30,7 +30,7 @@ jobs:
       - name: Setup mamba
         uses: conda-incubator/setup-miniconda@v2
         with:
-          mamba-version: '*'
+          mamba-version: '1.5.3'
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
           activate-environment: ""
@@ -51,7 +51,7 @@ jobs:
       - name: Setup mamba
         uses: conda-incubator/setup-miniconda@v2
         with:
-          mamba-version: '*'
+          mamba-version: '1.5.3'
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
           activate-environment: ""
@@ -72,7 +72,7 @@ jobs:
       - name: Setup mamba
         uses: conda-incubator/setup-miniconda@v2
         with:
-          mamba-version: '*'
+          mamba-version: '1.5.3'
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
           activate-environment: ""
@@ -93,7 +93,7 @@ jobs:
       - name: Setup mamba
         uses: conda-incubator/setup-miniconda@v2
         with:
-          mamba-version: '*'
+          mamba-version: '1.5.3'
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
           activate-environment: ""
