@@ -32,6 +32,7 @@ jobs:
         with:
           mamba-version: '1.5.3'
           conda-version: '23.9.0'
+          python-version: '3.12.6'
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
           activate-environment: ""
@@ -54,6 +55,7 @@ jobs:
         with:
           mamba-version: '1.5.3'
           conda-version: '23.9.0'
+          python-version: '3.12.6'
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
           activate-environment: ""
@@ -76,6 +78,7 @@ jobs:
         with:
           mamba-version: '1.5.3'
           conda-version: '23.9.0'
+          python-version: '3.12.6'
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
           activate-environment: ""
@@ -98,6 +101,7 @@ jobs:
         with:
           mamba-version: '1.5.3'
           conda-version: '23.9.0'
+          python-version: '3.12.6'
           channels: conda-forge,bioconda,defaults
           auto-activate-base: true
           activate-environment: ""
