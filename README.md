@@ -29,7 +29,7 @@ conda activate snakemake
 
 ## Usage
 
-To use the workflow with default settings modify the [target configuration file](/config/target.yaml). You can run the pieline on the output of a core gene analysis by providing the path to a set of multifasta files for gene families with **.fasta**.  Also you can provide the path to a folder containing assemblies with **.fasta** extension and set the core tool to "panacota", "roary" or "panaroo" in the [config file](/config/config.yaml). In that case the pipeline will previusly run a pangenome analysis on the genomes to get the core genes and then aplly the coorection to those genes. All the parameters used for finding the core genome can be modifyed in the [config file](/config/config.yaml). Then you can run the workflow with:
+To use the workflow with default settings modify the [target configuration file](/config/target.yaml) to set the input. You can run the pieline on the output of a core gene analysis by providing the path to a folder with a set of multifasta files for gene families with **.fasta** extension.  Also you can provide the path to a folder containing assemblies with **.fasta** extension and set the core tool to "panacota", "roary" or "panaroo" in the [config file](/config/config.yaml). In that case the pipeline will previusly run a pangenome analysis on the genomes to get the core genes and then aply the coorection to those genes. All the parameters used for finding the core genome can be modifyed in the [config file](/config/config.yaml). Then you can run the workflow with:
 
 ```
 snakemake --use-conda -c 8  # To run with 8 threads
