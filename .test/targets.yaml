@@ -1,0 +1,8 @@
+GENES_DIR:
+  "alignments"
+GENOMES_DIR:
+  "genomes"
+PREFIX:
+  "TEST"
+OUTDIR:
+  "output"
