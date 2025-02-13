@@ -24,6 +24,7 @@ If ypu have a conda distribution installed, you can use it to install snakemake 
 
 ```
 conda create -n snakemake -c conda-forge -c bioconda snakemake=8.20.5
+conda activate snakemake
 ```
 
 ## Usage
@@ -40,3 +41,21 @@ We recomend to run the workflow with at least 8 threads, but any natural number 
 ## Outputs
 
 Once the workflow is ended, it will have produced a concatenated alignment of the curated alignments of each gene and a maximum likelihood phylogeny for that alignment. Also intermedate files are provided to allow different analyses. 
+
+
+## Contributing
+Contributions are welcome! To contribute:
+1. Fork the repository.
+2. Create a feature branch (`git checkout -b feature-name`).
+3. Commit your changes (`git commit -m 'Add new feature'`).
+4. Push to the branch (`git push origin feature-name`).
+5. Open a Pull Request.
+
+---
+
+## License
+FixCore is licensed under the **GNU AGPL v3**. See the [LICENSE](LICENSE) file for details.
+
+## Contact
+For issues or questions, open an [issue](https://github.com/SeviJordi/FixCore/issues) on GitHub.
+
