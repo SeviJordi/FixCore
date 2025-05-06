@@ -1,0 +1,6 @@
+channels:
+  - auto
+  - bioconda
+dependencies:
+  - seqkit==2.8.2
+  - snp-sites==2.5.1
