@@ -39,42 +39,11 @@ git clone https://github.com/NerisGarcia/fixcore.git
 cd fixcore
 ```
 
-## Quick start
+## Run fixcore
 
-1.  Edit `config/target.yaml` to set input data.
-    -   Option A (precomputed core families): directory containing multi-FASTA files per gene family (`.fasta`).
-    -   Option B (assemblies): directory with genome assemblies (`.fasta`), and set `core_tool` to `panacota`, `roary`, or `panaroo` in `config/config.yaml`.
-2.  Adjust parameters in `config/config.yaml` as needed.
-3.  Run the workflow:
+There are several options to run fixcore:
 
-    ```bash
-    snakemake --use-conda -c 8
-    ```
-
-    We recommend at least 8 threads, but any positive integer is valid.
-
-
-Alternatively, you can use the provided Docker container to run the workflow. First, make sure you have [apptainer](https://apptainer.org/) or [Singularity](https://sylabs.io/singularity/) installed. Then, you can run the workflow using the following command:
-
-```
-snakemake --sdm apptainer -c 8  
-```
-
-## Configuration and parameter selection
-Workflow parameters can be changed in the configuration files:
-
--   `config/config.yaml`: global settings, including `core_tool` selection and parameters for pangenome, alignment, trimming, curation, and phylogeny.
--   `config/target.yaml`: input paths for genomes or core-family FASTA files and output directories.
-
-See inline comments in these files for parameter descriptions.
-
-## Outputs
-
--   Concatenated curated alignment of core genes.
--   Maximum-likelihood phylogeny for the concatenated alignment.
--   Intermediate files (per-gene alignments, trimmed and curated versions) to support downstream analyses.
-
-## Python wrapper
+### Use python wrapper
 A Python wrapper script `fixcore-runner.py` is provided for easier execution. It handles argument parsing and invokes Snakemake with the appropriate parameters.
 
 First, ensure you have the required Python packages installed:
@@ -122,6 +91,44 @@ For running with assemblies and PanACoTA for core-genome extraction:
 ```bash
 fixcore-runner.py -c 8  -a path/to/fixcore/.test/genomes/ -o test -t panacota
 ```
+
+### Edit yaml
+
+1.  Edit `config/target.yaml` to set input data.
+    -   Option A (precomputed core families): directory containing multi-FASTA files per gene family (`.fasta`).
+    -   Option B (assemblies): directory with genome assemblies (`.fasta`), and set `core_tool` to `panacota`, `roary`, or `panaroo` in `config/config.yaml`.
+2.  Adjust parameters in `config/config.yaml` as needed.
+3.  Run the workflow:
+
+    ```bash
+    snakemake --use-conda -c 8
+    ```
+
+    We recommend at least 8 threads, but any positive integer is valid.
+
+
+### Docker  container
+
+Alternatively, you can use the provided Docker container to run the workflow. First, make sure you have [apptainer](https://apptainer.org/) or [Singularity](https://sylabs.io/singularity/) installed. Then, you can run the workflow using the following command:
+
+```
+snakemake --sdm apptainer -c 8  
+```
+
+## Configuration and parameter selection
+Workflow parameters can be changed in the configuration files:
+
+-   `config/config.yaml`: global settings, including `core_tool` selection and parameters for pangenome, alignment, trimming, curation, and phylogeny.
+-   `config/target.yaml`: input paths for genomes or core-family FASTA files and output directories.
+
+See inline comments in these files for parameter descriptions.
+
+## Outputs
+
+-   Concatenated curated alignment of core genes.
+-   Maximum-likelihood phylogeny for the concatenated alignment.
+-   Intermediate files (per-gene alignments, trimmed and curated versions) to support downstream analyses.
+
 
 ## Troubleshooting
 
